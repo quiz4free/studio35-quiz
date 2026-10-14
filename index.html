@@ -96,7 +96,7 @@ function submit(){
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){x.textContent="Please enter a valid email address.";return}
   if(!c){x.textContent="Please tick the box so we can email your results.";return}
   var p={name:n,email:e,consent:true,topMatch:CLASSES[ranked[0]].n,secondMatch:CLASSES[ranked[1]].n,thirdMatch:CLASSES[ranked[2]].n,answers:picks};
-  if(CONFIG.webhookUrl){try{fetch(CONFIG.webhookUrl,{method:"POST",mode:"no-cors",body:JSON.stringify(p)}).catch(function(){})}catch(err){}}
+  if(CONFIG.webhookUrl){try{fetch(CONFIG.webhookUrl,{method:"POST",mode:"no-cors",body:new URLSearchParams({name:p.name,email:p.email,consent:"yes",topMatch:p.topMatch,secondMatch:p.secondMatch,thirdMatch:p.thirdMatch,answers:p.answers.join(" | ")})}).catch(function(){})}catch(err){}}
   results(n)}
 function card(k){return '<h3>'+esc(CLASSES[k].n)+'</h3><p>'+esc(CLASSES[k].d)+'</p>'}
 function results(n){
