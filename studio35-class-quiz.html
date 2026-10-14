@@ -1,0 +1,103 @@
+<!-- Studio 35 class quiz. Paste into a Webflow Embed element. Edit CONFIG and the colors below. -->
+<div id="s35q" class="s35q" aria-live="polite"></div>
+<style>
+#s35q{--ink:#2b2b2b;--bg:#faf7f2;--accent:#5b6f4e;--accent-ink:#fff;--line:#d9d2c5;max-width:640px;margin:0 auto;padding:28px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:12px;font-family:inherit;line-height:1.5;box-sizing:border-box}
+#s35q *{box-sizing:border-box}
+#s35q h2{margin:0 0 6px;font-size:1.6rem;line-height:1.2}
+#s35q h3{margin:0 0 14px;font-size:1.25rem}
+#s35q p{margin:0 0 14px}
+#s35q .meta{font-size:.9rem;opacity:.75;margin-bottom:10px}
+#s35q .opt,#s35q .btn{display:block;width:100%;text-align:left;padding:13px 16px;margin:0 0 10px;font:inherit;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:8px;cursor:pointer}
+#s35q .opt:hover{border-color:var(--accent)}
+#s35q .btn{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);text-align:center;font-weight:600;text-decoration:none}
+#s35q .btn.alt{background:#fff;color:var(--accent)}
+#s35q button:focus-visible,#s35q input:focus-visible,#s35q a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#s35q label{display:block;margin:0 0 4px;font-weight:600}
+#s35q input[type=text],#s35q input[type=email]{width:100%;padding:12px;margin:0 0 14px;font:inherit;border:1.5px solid var(--line);border-radius:8px}
+#s35q .consent{display:flex;gap:10px;font-weight:400;font-size:.9rem;margin-bottom:14px}
+#s35q .consent input{margin-top:4px}
+#s35q .err{color:#a1281f;font-size:.9rem;margin:-4px 0 12px}
+#s35q .also{border-top:1px solid var(--line);margin-top:18px;padding-top:14px}
+@media (max-width:480px){#s35q{padding:18px}}
+</style>
+<script>
+(function(){
+var CONFIG={
+  webhookUrl:"",            // Zapier/Make/email-tool webhook that emails the results + guide
+  guideUrl:"#",             // link to the lead magnet PDF
+  bookUrl:"#"               // Studio 35 schedule / booking page
+};
+var CLASSES={
+  reb:{n:"Rebounding",d:"A high-energy, low-impact class where you bounce on rebound shoes to tone and build cardio fitness."},
+  bun:{n:"Bungee Fitness",d:"A full-body workout with light weights, resistance bands, and a bungee fly system that lightens your body while you build strength and endurance."},
+  bod:{n:"Body Boost",d:"A low-impact, all-ages mix of resistance training and stretching, with something new each week to keep it interesting."},
+  pil:{n:"Mat Pilates",d:"Controlled movements with body weight, rings, and bands to strengthen your core, improve flexibility, and build lean muscle."},
+  zum:{n:"Zumba",d:"A dance-fitness party that mixes high and low-intensity moves to Latin rhythms, so it feels more like fun than exercise."},
+  bar:{n:"Barre",d:"Strength, cardio, Pilates, and yoga set to popular music, with intensity levels for every fitness level."},
+  tra:{n:"Trapeze Yoga",d:"Zero-impact, anti-gravity yoga on a suspended trapeze that improves balance and builds core, leg, back, and shoulder strength."}
+};
+var ORDER=["bod","pil","bar","zum","reb","bun","tra"]; // tie-break: friendliest starting point first
+var Q=[
+ {q:"What's your main goal right now?",o:[
+  ["Burn calories and have fun",{zum:2,reb:2,bar:1}],
+  ["Build strength and tone up",{bun:2,pil:2,bar:2,bod:1}],
+  ["Improve flexibility, posture, and balance",{pil:2,tra:2,bar:1}],
+  ["Feel better overall, gently",{bod:2,tra:1,reb:1}]]},
+ {q:"Where are you starting from?",o:[
+  ["New to exercise or coming back after a break",{bod:2,zum:1,pil:1}],
+  ["Moderately active",{bar:1,zum:1,pil:1,reb:1}],
+  ["Very active and ready for a challenge",{bun:2,bar:2,reb:1}],
+  ["I want low-impact movement that's easy on my joints",{reb:2,tra:2,bod:2}]]},
+ {q:"What kind of vibe do you want in class?",o:[
+  ["A dance party with great music",{zum:3,bar:1}],
+  ["Focused and controlled",{pil:3,bar:1}],
+  ["Something totally new and different",{bun:2,reb:2,tra:2}],
+  ["Calm and restorative",{tra:2,bod:2,pil:1}]]},
+ {q:"How do you like to work out?",o:[
+  ["Instructor-led, with fresh routines each week",{bod:2,bar:1}],
+  ["Group energy and music",{zum:2,bar:2,reb:1}],
+  ["With equipment like bands, rings, or weights",{bun:2,pil:2,bar:1}],
+  ["Bouncing, flying, or floating",{reb:2,bun:2,tra:2}]]},
+ {q:"How do you want to feel afterward?",o:[
+  ["Energized and sweaty",{zum:2,reb:2,bun:1}],
+  ["Strong and sculpted",{bun:2,pil:2,bar:2}],
+  ["Long, loose, and balanced",{tra:2,pil:2}],
+  ["Refreshed and relaxed",{bod:2,tra:2}]]}
+];
+var root=document.getElementById("s35q"),step=0,score={},picks=[],ranked=[];
+function el(h){root.innerHTML=h}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function start(){step=0;score={};picks=[];
+  el('<h2>Not sure which class is right for you?</h2><p>Answer 5 quick questions and we\'ll match you with the best Studio 35 classes, plus send you our free guide, <em>Eat Out, Stay on Track</em>.</p><button class="btn" id="go" type="button">Start the quiz</button>');
+  document.getElementById("go").onclick=ask}
+function ask(){var d=Q[step];
+  el('<p class="meta">Question '+(step+1)+' of '+Q.length+'</p><h3>'+esc(d.q)+'</h3>'+d.o.map(function(x,i){return '<button class="opt" type="button" data-i="'+i+'">'+esc(x[0])+'</button>'}).join(""));
+  root.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){
+    var a=d.o[+b.dataset.i];picks.push(a[0]);
+    for(var k in a[1])score[k]=(score[k]||0)+a[1][k];
+    step++;step<Q.length?ask():capture()}})}
+function capture(){
+  ranked=ORDER.slice().sort(function(a,b){return (score[b]||0)-(score[a]||0)});
+  el('<h3>Your matches are ready!</h3><p>Where should we send your class matches and the free guide?</p><label for="s35n">First name</label><input type="text" id="s35n" autocomplete="given-name"><label for="s35e">Email</label><input type="email" id="s35e" autocomplete="email"><label class="consent"><input type="checkbox" id="s35c"><span>Yes, email me my class matches and the free guide. I can unsubscribe anytime.</span></label><div class="err" id="s35x" role="alert"></div><button class="btn" id="s35s" type="button">Show my matches</button>');
+  document.getElementById("s35s").onclick=submit}
+function submit(){
+  var n=document.getElementById("s35n").value.trim(),e=document.getElementById("s35e").value.trim(),
+      c=document.getElementById("s35c").checked,x=document.getElementById("s35x");
+  if(!n){x.textContent="Please enter your first name.";return}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){x.textContent="Please enter a valid email address.";return}
+  if(!c){x.textContent="Please tick the box so we can email your results.";return}
+  var p={name:n,email:e,consent:true,topMatch:CLASSES[ranked[0]].n,secondMatch:CLASSES[ranked[1]].n,thirdMatch:CLASSES[ranked[2]].n,answers:picks};
+  if(CONFIG.webhookUrl){try{fetch(CONFIG.webhookUrl,{method:"POST",mode:"no-cors",body:JSON.stringify(p)}).catch(function(){})}catch(err){}}
+  results(n)}
+function card(k){return '<h3>'+esc(CLASSES[k].n)+'</h3><p>'+esc(CLASSES[k].d)+'</p>'}
+function results(n){
+  el('<h2>'+esc(n)+', your best match is '+esc(CLASSES[ranked[0]].n)+'</h2>'+card(ranked[0])+
+   '<div class="also"><p class="meta">You might also love</p>'+card(ranked[1])+card(ranked[2])+'</div>'+
+   '<p>We\'re emailing these matches to you now. Here\'s your free guide too:</p>'+
+   '<a class="btn" href="'+CONFIG.guideUrl+'">Download Eat Out, Stay on Track</a>'+
+   '<a class="btn alt" href="'+CONFIG.bookUrl+'">View classes and book</a>'+
+   '<button class="opt" type="button" id="again">Retake the quiz</button>');
+  document.getElementById("again").onclick=start}
+start();
+})();
+</script>
