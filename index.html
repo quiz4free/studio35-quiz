@@ -101,7 +101,7 @@ function card(k){return '<h3>'+esc(CLASSES[k].n)+'</h3><p>'+esc(CLASSES[k].d)+'<
 function results(n){
   el('<h2>'+esc(n)+', your best match is '+esc(CLASSES[ranked[0]].n)+'</h2>'+card(ranked[0])+
    '<div class="also"><p class="meta">You might also love</p>'+card(ranked[1])+card(ranked[2])+'</div>'+
-   '<p>We\'re emailing these matches to you now.</p>'+
+   '<p>Check your email.</p>'+
   // '<a class="btn" href="'+CONFIG.guideUrl+'">Download Eat Out, Stay on Track</a>'+
    '<a class="btn alt" href="'+CONFIG.bookUrl+'">View classes and book</a>'+
    '<button class="opt" type="button" id="again">Retake the quiz</button>');
